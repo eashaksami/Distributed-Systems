@@ -1,12 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Backend.Data;
 using Backend.HubConfig;
-using DS_Lab.HubConfig;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DS_Lab
+namespace Backend
 {
     public class Startup
     {
@@ -22,15 +29,18 @@ namespace DS_Lab
         {
             services.AddCors(options => 
             { 
-                options.AddPolicy("CorsPolicy", builder => builder
-                .WithOrigins("http://localhost:4200", "http://localhost:4201")
+                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()); 
             });
 
             services.AddSignalR();
+
             services.AddControllers();
+
+            services.AddDbContext<DataContext>
+            (x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,8 +62,7 @@ namespace DS_Lab
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChartHub>("/chart");
-                // endpoints.MapHub<DriverHub>("/chart/driver");
+                endpoints.MapHub<ClientHub>("/client");
             });
         }
     }
