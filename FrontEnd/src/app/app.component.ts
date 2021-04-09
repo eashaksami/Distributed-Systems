@@ -1,40 +1,50 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from './SignalRService';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SignalRService } from './SignalR.service';
+import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit{
+
+export class AppComponent implements OnInit {
+  
   constructor(public signalRService: SignalRService, private http: HttpClient) { }
+
   ngOnInit() {
-    setInterval(()=> { 
-    this.signalRService.startConnection()
-    .then(() => this.startHttpRequest())
-    .then(() => this.signalRService.addBroadcastChartDataListener());
-    // .then(() => this.chartClicked());
-    }, 1000);
+
+    this.signalRService.startConnection();
+    this.signalRService.addBroadcastChartDataListener();
+    setInterval(()=> {
+      this.startHttpRequest();
+      }, 1000);
   }
 
-  public startHttpRequest = () => {
+  private startHttpRequest = () => {
+    const config: Config = {
+      dictionaries: [names]
+    }
     const params = new HttpParams()
                         .set('lat', ((Math.random() * 100) + 1).toString())
                         .set('lang', ((Math.random() * 100) + 1).toString())
-                        .set('name', "Sami")
-                        .set('connectionId', (this.signalRService.connectionId));
-    console.log("Rider Data: " + params.toString());
-    this.http.get('https://localhost:5001/api/chart/rider', {params})
+                        .set('name', uniqueNamesGenerator(config));
+    this.http.get('https://localhost:5001/api/ClientBot', {params})
       .subscribe(res => {
         console.log(res);
-      })
-  }
-  
-  public chartClicked = () => {
-    var lat = (Math.random() * 100) + 1;
-    var long = (Math.random() * 100) + 1;
-    // this.signalRService.broadcastChartData(lat, long, "Sami");
+      });
+    
+    this.addDriver(config);
   }
 
+  addDriver(config: Config){
+    const params = new HttpParams()
+                        .set('lat', ((Math.random() * 100) + 1).toString())
+                        .set('lang', ((Math.random() * 100) + 1).toString())
+                        .set('name', uniqueNamesGenerator(config));
+    this.http.get('https://localhost:5001/api/ClientBot/driver', {params})
+      .subscribe(res => {
+        console.log(res);
+      });
+  }
 }
