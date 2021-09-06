@@ -9,7 +9,7 @@ const server = http.createServer(app);
 app.use(express.json());
 
 // connecting to db
-mongoose.connect('mongodb://localhost:27017/RideSharingApp', {
+mongoose.connect('mongodb://mongodb:27017/RideSharingApp', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
