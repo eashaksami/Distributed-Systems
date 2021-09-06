@@ -1,7 +1,7 @@
 const io = require('socket.io-client');
 const http = require('http');
 
-const socket = io.connect('ws://localhost:5000');
+const socket = io.connect('http://localhost:5000');
 
 socket.on("message", message=> {
   console.log(message);
@@ -35,6 +35,7 @@ var rating = function(data){
   const options = {
     hostname: 'localhost',
     port: 104,
+    // port: 3001,
     path: '/rating',
     method: 'POST',
     headers: {
@@ -43,7 +44,7 @@ var rating = function(data){
   }
 
   const req = http.request(options, res => {
-    console.log(`statusCode: ${res.statusCode}`)
+    console.log(`statusCode: ${res.statusCode}`);
   
     res.on('data', d => {
       process.stdout.write(d);
@@ -79,6 +80,8 @@ var riderData = function(){
   const options = {
     hostname: 'localhost',
     port: 104,
+    // port: 8080,
+    // port: 3000,
     path: '/rider',
     method: 'POST',
     headers: {
@@ -115,6 +118,8 @@ var driverData = function(){
     const options = {
       hostname: 'localhost',
       port: 104,
+      // port: 3000,
+      // port: 8080,
       path: '/driver',
       method: 'POST',
       headers: {
