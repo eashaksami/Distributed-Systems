@@ -80,7 +80,8 @@ const sendData = function(match) {
   const data = JSON.stringify(match);
 
   const options = {
-    hostname: 'localhost',
+    // hostname: 'localhost',
+    hostname: 'communication-service',
     port: 3002,
     path: '/communication',
     method: 'POST',
@@ -115,5 +116,6 @@ app.post('/driver', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+// const HOST = '0.0.0.0';
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT);
