@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const server = http.createServer(app);
 
+const server_location = process.env.SERVERLOCATION;
+
 app.use(express.json());
 
 var rider = [];
@@ -81,7 +83,8 @@ const sendData = function(match) {
 
   const options = {
     // hostname: 'localhost',
-    hostname: 'communication-service',
+    // hostname: 'communication-service',
+    hostname: `communication-service-${server_location}`,
     port: 3002,
     path: '/communication',
     method: 'POST',
